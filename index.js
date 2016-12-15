@@ -18,14 +18,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function queryCache(query, data){
+    return data.filter(item => {
+      return item.city.slice(0,query.length).toLowerCase() === query.toLowerCase() ||
+      item.state.slice(0,query.length).toLowerCase() === query.toLowerCase();
+    });
+  }
+  
   function initApplication(data){
     const cache = JSON.parse(data);
     const input = document.getElementById('textField')
                           .addEventListener('keyup', (e) => {
                             //call function to compare w/ cache
                             //render new data accordingly
+                            const query = e.target.value;
+                            queryCache(query,cache);
                           })
-    console.log(cache);
   }
 
   getData(endpoint, initApplication);
