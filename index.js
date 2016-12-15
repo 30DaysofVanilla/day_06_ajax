@@ -18,14 +18,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function queryCache(query, data){
+    if (!query) return;
+    return data.filter(item => {
+      return item.city.slice(0,query.length).toLowerCase() === query.toLowerCase() ||
+      item.state.slice(0,query.length).toLowerCase() === query.toLowerCase();
+    });
+  }
+
+  function clear(className){
+    const groupByClassName = document.getElementsByClassName(className);
+    Array.from(groupByClassName).forEach(el => el.parentNode.removeChild(el));
+  }
+
+  function render(data = []){
+    clear("place");
+    data.forEach(place => {
+      const newPlace = document.createElement('p');
+      newPlace.innerHTML = place.city + ' , ' + place.state;
+      newPlace.className = "place";
+      document.body.appendChild(newPlace);
+    });
+    return true;
+  }
+
   function initApplication(data){
     const cache = JSON.parse(data);
-    const input = document.getElementById('textField')
-                          .addEventListener('keyup', (e) => {
-                            //call function to compare w/ cache
-                            //render new data accordingly
-                          })
-    console.log(cache);
+    document.getElementById('textField')
+            .addEventListener('keyup', (e) => {
+              const query = e.target.value;
+              render(queryCache(query,cache));
+            });
   }
 
   getData(endpoint, initApplication);
